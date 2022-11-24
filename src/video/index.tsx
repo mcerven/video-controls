@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import VideoControls from "./VideoControls";
+import "./Video.css";
 
-type StartStop = [start: number, stop: number];
+export type StartStop = [start: number, stop: number];
 
 interface VideoProps {
   children: React.ReactElement;
@@ -11,16 +12,17 @@ interface VideoProps {
 function Video({ children, startStopPairs }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const [startStopPairsIndex, setStartStopPairsIndex] = useState(0);
+  const [currentProgress, setCurrentProgress] = useState(0);
 
   const resetTime = () => {
     if (!ref.current) {
       return;
     }
-    const result =
+    const newTime =
       ref.current.duration * startStopPairs[startStopPairsIndex][0];
 
-    if (!Number.isNaN(result)) {
-      ref.current.currentTime = result;
+    if (!Number.isNaN(newTime)) {
+      ref.current.currentTime = newTime;
     }
   };
 
@@ -30,6 +32,8 @@ function Video({ children, startStopPairs }: VideoProps) {
     };
     const onTimeUpdate = (e: Event) => {
       if (!ref.current) return;
+
+      setCurrentProgress(ref.current.currentTime / ref.current.duration);
 
       if (
         ref.current.currentTime >=
@@ -73,8 +77,9 @@ function Video({ children, startStopPairs }: VideoProps) {
         handlePreviousClick={handlePreviousClick}
         handleStopPlayClick={handleStopPlayClick}
         handleNextClick={handleNextClick}
+        startStopPairs={startStopPairs}
+        currentProgress={currentProgress}
       />
-      <div>{startStopPairs[startStopPairsIndex].join(" - ")}</div>
     </div>
   );
 }
