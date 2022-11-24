@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import VideoControls from "./VideoControls";
-import "./Video.css";
+import Slider from "./Slider";
 
 export type StartStop = [start: number, stop: number];
 
@@ -57,29 +56,45 @@ function Video({ children, startStopPairs }: VideoProps) {
   }, [startStopPairsIndex]);
 
   const handlePreviousClick = () => {
-    setStartStopPairsIndex((val) => Math.max(val - 1, 0));
+    setStartStopPairsIndex((val) => val - 1);
   };
 
-  const handleStopPlayClick = () => {};
+  const handleStopPlayClick = () => {
+    if (ref.current?.paused) {
+      ref.current?.play();
+    } else {
+      ref.current?.pause();
+    }
+  };
 
   const handleNextClick = () => {
-    setStartStopPairsIndex((val) =>
-      Math.min(val + 1, startStopPairs.length - 1)
-    );
+    setStartStopPairsIndex((val) => val + 1);
   };
 
   return (
-    <div>
+    <div className="video">
       <video ref={ref} width="400" loop muted autoPlay controls>
         {children}
       </video>
-      <VideoControls
-        handlePreviousClick={handlePreviousClick}
-        handleStopPlayClick={handleStopPlayClick}
-        handleNextClick={handleNextClick}
-        startStopPairs={startStopPairs}
+      <Slider
         currentProgress={currentProgress}
+        startStopPairs={startStopPairs}
       />
+      <div>
+        <button
+          disabled={startStopPairsIndex <= 0}
+          onClick={handlePreviousClick}
+        >
+          {"←"}
+        </button>
+        <button onClick={handleStopPlayClick}>Stop/Play</button>
+        <button
+          disabled={startStopPairsIndex >= startStopPairs.length - 1}
+          onClick={handleNextClick}
+        >
+          {"→"}
+        </button>
+      </div>
     </div>
   );
 }
