@@ -1,3 +1,4 @@
+import React from "react";
 import { StartStop } from ".";
 
 function toPercentStr(val: number): string {
@@ -19,8 +20,8 @@ export default function Slider({
         className="slider-cursor"
         style={{ left: toPercentStr(currentProgress) }}
       />
-      {startStopPairs.map((pair) => (
-        <>
+      {startStopPairs.map((pair, index) => (
+        <React.Fragment key={index}>
           <div
             className="slider-range-indicator"
             style={{ left: toPercentStr(pair[0]) }}
@@ -29,7 +30,7 @@ export default function Slider({
             className="slider-range-indicator"
             style={{ left: toPercentStr(pair[1]) }}
           />
-        </>
+        </React.Fragment>
       ))}
     </div>
   );

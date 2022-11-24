@@ -1,4 +1,5 @@
 import Video from "./video";
+import mp4 from "./assets/mov_bbb.mp4";
 
 function App() {
   return (
@@ -10,27 +11,13 @@ function App() {
         ]}
       >
         <>
-          <source
-            src="https://www.w3schools.com/html/mov_bbb.mp4"
-            type="video/mp4"
-          />
-          <source
-            src="https://www.w3schools.com/html/mov_bbb.ogg"
-            type="video/ogg"
-          />
+          <source src={mp4} type="video/mp4" />
           Your browser does not support HTML video.
         </>
       </Video>
       <Video startStopPairs={[[0, 1]]}>
         <>
-          <source
-            src="https://www.w3schools.com/html/mov_bbb.mp4"
-            type="video/mp4"
-          />
-          <source
-            src="https://www.w3schools.com/html/mov_bbb.ogg"
-            type="video/ogg"
-          />
+          <source src={mp4} type="video/mp4" />
           Your browser does not support HTML video.
         </>
       </Video>
