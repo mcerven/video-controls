@@ -29,7 +29,7 @@ function Video({ children, startStopPairs }: VideoProps) {
     const onLoadedData = () => {
       resetTime();
     };
-    const onTimeUpdate = (e: Event) => {
+    const onTimeUpdate = () => {
       if (!ref.current) return;
 
       setCurrentProgress(ref.current.currentTime / ref.current.duration);
@@ -73,7 +73,7 @@ function Video({ children, startStopPairs }: VideoProps) {
 
   return (
     <div className="video">
-      <video ref={ref} width="400" loop muted autoPlay controls>
+      <video ref={ref} width="400" loop muted autoPlay>
         {children}
       </video>
       <Slider
