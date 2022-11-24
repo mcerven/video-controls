@@ -13,9 +13,9 @@ export default function VideoControls({
 }: VideoControlsProps) {
   return (
     <div>
-      <button onClick={handlePreviousClick}>Previous</button>
+      <button onClick={handlePreviousClick}>{"←"}</button>
       <button onClick={handleStopPlayClick}>Stop/Play</button>
-      <button onClick={handleNextClick}>Next</button>
+      <button onClick={handleNextClick}>{"→"}</button>
     </div>
   );
 }

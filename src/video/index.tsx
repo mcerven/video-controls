@@ -12,13 +12,17 @@ function Video({ children, startStopPairs }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const [startStopPairsIndex, setStartStopPairsIndex] = useState(0);
 
-  const resetTime = useCallback(() => {
+  const resetTime = () => {
     if (!ref.current) {
       return;
     }
-    ref.current.currentTime =
+    const result =
       ref.current.duration * startStopPairs[startStopPairsIndex][0];
-  }, []);
+
+    if (!Number.isNaN(result)) {
+      ref.current.currentTime = result;
+    }
+  };
 
   useEffect(() => {
     const onLoadedData = () => {
@@ -42,7 +46,17 @@ function Video({ children, startStopPairs }: VideoProps) {
       ref.current?.removeEventListener("loadeddata", onLoadedData);
       ref.current?.removeEventListener("timeupdate", onTimeUpdate);
     };
-  }, [startStopPairsIndex, resetTime]);
+  }, [startStopPairsIndex]);
+
+  useEffect(() => {
+    resetTime();
+  }, [startStopPairsIndex]);
+
+  const handlePreviousClick = () => {
+    setStartStopPairsIndex((val) => Math.max(val - 1, 0));
+  };
+
+  const handleStopPlayClick = () => {};
 
   const handleNextClick = () => {
     setStartStopPairsIndex((val) =>
@@ -50,16 +64,10 @@ function Video({ children, startStopPairs }: VideoProps) {
     );
   };
 
-  const handlePreviousClick = () => {
-    return setStartStopPairsIndex((val) => Math.max(val - 1, 0));
-  };
-  const handleStopPlayClick = () => {};
-
   return (
     <div>
       <video ref={ref} width="400" loop muted autoPlay controls>
-        <>{children}</>
-        Your browser does not support HTML video.
+        {children}
       </video>
       <VideoControls
         handlePreviousClick={handlePreviousClick}
