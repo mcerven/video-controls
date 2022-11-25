@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "./Slider";
 
 export type StartStop = [start: number, stop: number];
+const width = 400;
 
 interface VideoProps {
   children: React.ReactElement;
@@ -73,12 +74,13 @@ function Video({ children, startStopPairs }: VideoProps) {
 
   return (
     <div className="video">
-      <video ref={ref} width="400" loop muted autoPlay>
+      <video ref={ref} width={width} loop muted autoPlay>
         {children}
       </video>
       <Slider
         currentProgress={currentProgress}
         startStopPairs={startStopPairs}
+        width={width}
       />
       <div>
         <button

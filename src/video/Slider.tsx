@@ -8,30 +8,31 @@ function toPercentStr(val: number): string {
 interface SliderProps {
   currentProgress: number;
   startStopPairs: StartStop[];
+  width: number;
 }
 
 export default function Slider({
   currentProgress,
   startStopPairs,
+  width,
 }: SliderProps) {
   return (
     <div className="slider">
-      <div
-        className="slider-cursor"
-        style={{ left: toPercentStr(currentProgress) }}
-      />
       {startStopPairs.map((pair, index) => (
         <React.Fragment key={index}>
           <div
             className="slider-range-indicator"
-            style={{ left: toPercentStr(pair[0]) }}
-          />
-          <div
-            className="slider-range-indicator"
-            style={{ left: toPercentStr(pair[1]) }}
+            style={{
+              left: Math.floor(pair[0] * width),
+              right: Math.floor(width - pair[1] * width),
+            }}
           />
         </React.Fragment>
       ))}
+      <div
+        className="slider-cursor"
+        style={{ left: toPercentStr(currentProgress) }}
+      />
     </div>
   );
 }
