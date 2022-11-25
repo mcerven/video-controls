@@ -1,26 +1,33 @@
+import { useEffect, useRef, useState } from "react";
+import { getVideoData } from "./getVideoData";
+import { VideoData } from "./types";
 import Video from "./video";
-import mp4 from "./assets/mov_bbb.mp4";
 
 function App() {
+  const [videoData, setVideoData] = useState<VideoData[]>([]);
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current === false) {
+      initialized.current = true;
+
+      (async () => {
+        const res = await getVideoData;
+        setVideoData(res);
+      })();
+    }
+  }, []);
+
   return (
     <div className="App">
-      <Video
-        startStopPairs={[
-          [0.2, 0.4],
-          [0.6, 0.8],
-        ]}
-      >
-        <>
-          <source src={mp4} type="video/mp4" />
-          Your browser does not support HTML video.
-        </>
-      </Video>
-      <Video startStopPairs={[[0, 1]]}>
-        <>
-          <source src={mp4} type="video/mp4" />
-          Your browser does not support HTML video.
-        </>
-      </Video>
+      {videoData.map((v, index) => (
+        <Video key={index} startStopPairs={v.startStopPairs}>
+          <>
+            <source src={v.src} type={v.srcType} />
+            Your browser does not support HTML video.
+          </>
+        </Video>
+      ))}
     </div>
   );
 }
