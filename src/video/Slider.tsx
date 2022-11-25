@@ -1,27 +1,51 @@
-import React from "react";
-import { StartStop } from ".";
-
-function toPercentStr(val: number): string {
-  return `${val * 100}%`;
-}
+import React, { useEffect, useRef } from "react";
+import { StartStop } from "../types";
+import { toPercentStr } from "./toPercentStr";
 
 interface SliderProps {
   currentProgress: number;
   startStopPairs: StartStop[];
+  startStopPairsIndex: number;
   width: number;
+  handleSetTimeFraction: (fraction: number) => void;
 }
 
 export default function Slider({
   currentProgress,
   startStopPairs,
+  startStopPairsIndex,
   width,
+  handleSetTimeFraction,
 }: SliderProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    const handleClick = (e: MouseEvent): void => {
+      if (!ref.current) return;
+
+      const rect = ref.current.getBoundingClientRect();
+
+      // Mouse position
+      const x = e.clientX - rect.left;
+      handleSetTimeFraction(x / width);
+    };
+    ref.current.addEventListener("click", handleClick);
+
+    return () => {
+      ref.current?.removeEventListener("click", handleClick);
+    };
+  }, []);
+
   return (
-    <div className="slider">
+    <div ref={ref} className="slider">
       {startStopPairs.map((pair, index) => (
         <React.Fragment key={index}>
           <div
-            className="slider-range-indicator"
+            className={`slider-range-indicator ${
+              startStopPairsIndex === index ? "selected" : ""
+            }`}
             style={{
               left: Math.floor(pair[0] * width),
               right: Math.floor(width - pair[1] * width),

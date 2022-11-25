@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Slider from "./Slider";
+import { StartStop } from "../types";
+import { getClosestValidFraction } from "./toPercentStr";
 
-export type StartStop = [start: number, stop: number];
 const width = 400;
 
 interface VideoProps {
@@ -80,16 +81,29 @@ function Video({ children, startStopPairs }: VideoProps) {
       <Slider
         currentProgress={currentProgress}
         startStopPairs={startStopPairs}
+        startStopPairsIndex={startStopPairsIndex}
         width={width}
+        handleSetTimeFraction={(fraction) => {
+          if (!ref.current) return;
+
+          const closestFractionResult = getClosestValidFraction(
+            startStopPairs,
+            fraction
+          );
+
+          setStartStopPairsIndex(closestFractionResult.startStopPairsIndex);
+          ref.current.currentTime =
+            closestFractionResult.fraction * ref.current.duration;
+        }}
       />
-      <div>
+      <div className="video-control-buttons">
         <button
           disabled={startStopPairsIndex <= 0}
           onClick={handlePreviousClick}
         >
           {"←"}
         </button>
-        <button onClick={handleStopPlayClick}>Stop/Play</button>
+        <button onClick={handleStopPlayClick}>Play / Stop</button>
         <button
           disabled={startStopPairsIndex >= startStopPairs.length - 1}
           onClick={handleNextClick}
