@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import VideoProgress from "./VideoProgress";
 import { StartStop } from "../types";
-import { getClosestValidFraction } from "../utils/videoPlayerHelpers";
+import getClosestValidFraction from "../utils/getClosestValidFraction";
 import useTimeUpdate from "../hooks/useTimeUpdate";
 
 const width = 400;

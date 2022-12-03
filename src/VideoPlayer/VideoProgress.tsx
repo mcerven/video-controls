@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { StartStop } from "../types";
-import { toPercentStr } from "../utils/videoPlayerHelpers";
 
 interface VideoProgressProps {
   currentProgress: number;
@@ -47,7 +46,7 @@ export default function VideoProgress({
       ))}
       <div
         className="video-progress-cursor"
-        style={{ left: toPercentStr(currentProgress) }}
+        style={{ left: `${currentProgress * 100}%` }}
       />
     </div>
   );
