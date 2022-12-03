@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import VideoProgress from "./VideoProgress";
 import { StartStop } from "../types";
 import { getClosestValidFraction } from "../utils/videoPlayerHelpers";
+import useTimeUpdate from "../hooks/useTimeUpdate";
 
 const width = 400;
 
@@ -13,43 +14,12 @@ interface VideoProps {
 function VideoPlayer({ children, startStopPairs }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const [startStopPairsIndex, setStartStopPairsIndex] = useState(0);
-  const [currentProgress, setCurrentProgress] = useState(0);
 
-  const resetTime = () => {
-    if (!ref.current) {
-      return;
-    }
-    const newTime =
-      ref.current.duration * startStopPairs[startStopPairsIndex][0];
-
-    if (!Number.isNaN(newTime)) {
-      ref.current.currentTime = newTime;
-    }
-  };
-
-  useEffect(() => {
-    const onTimeUpdate = () => {
-      if (!ref.current) return;
-
-      setCurrentProgress(ref.current.currentTime / ref.current.duration);
-
-      if (
-        ref.current.currentTime >=
-        ref.current.duration * startStopPairs[startStopPairsIndex][1]
-      ) {
-        resetTime();
-      }
-    };
-    resetTime();
-
-    ref.current?.addEventListener("loadeddata", resetTime);
-    ref.current?.addEventListener("timeupdate", onTimeUpdate);
-
-    return () => {
-      ref.current?.removeEventListener("loadeddata", resetTime);
-      ref.current?.removeEventListener("timeupdate", onTimeUpdate);
-    };
-  }, [startStopPairsIndex]);
+  const { currentProgress } = useTimeUpdate(
+    ref,
+    startStopPairs,
+    startStopPairsIndex
+  );
 
   const handlePreviousClick = () => {
     setStartStopPairsIndex((val) => val - 1);
