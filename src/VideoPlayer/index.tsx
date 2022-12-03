@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import VideoProgress from "./VideoProgress";
 import { StartStop } from "../types";
 import { getClosestValidFraction } from "../utils/videoPlayerHelpers";
@@ -28,9 +28,6 @@ function VideoPlayer({ children, startStopPairs }: VideoProps) {
   };
 
   useEffect(() => {
-    const onLoadedData = () => {
-      resetTime();
-    };
     const onTimeUpdate = () => {
       if (!ref.current) return;
 
@@ -43,35 +40,47 @@ function VideoPlayer({ children, startStopPairs }: VideoProps) {
         resetTime();
       }
     };
+    resetTime();
 
-    ref.current?.addEventListener("loadeddata", onLoadedData);
+    ref.current?.addEventListener("loadeddata", resetTime);
     ref.current?.addEventListener("timeupdate", onTimeUpdate);
 
     return () => {
-      ref.current?.removeEventListener("loadeddata", onLoadedData);
+      ref.current?.removeEventListener("loadeddata", resetTime);
       ref.current?.removeEventListener("timeupdate", onTimeUpdate);
     };
-  }, [startStopPairsIndex]);
-
-  useEffect(() => {
-    resetTime();
   }, [startStopPairsIndex]);
 
   const handlePreviousClick = () => {
     setStartStopPairsIndex((val) => val - 1);
   };
 
-  const handleStopPlayClick = () => {
-    if (ref.current?.paused) {
-      ref.current?.play();
-    } else {
-      ref.current?.pause();
-    }
-  };
-
   const handleNextClick = () => {
     setStartStopPairsIndex((val) => val + 1);
   };
+
+  const handleStopPlayClick = () => {
+    if (!ref.current) return;
+
+    if (ref.current.paused) {
+      ref.current.play();
+    } else {
+      ref.current.pause();
+    }
+  };
+
+  const handleSetTimeFraction = useCallback((fraction: number): void => {
+    if (!ref.current) return;
+
+    const closestFractionResult = getClosestValidFraction(
+      startStopPairs,
+      fraction
+    );
+
+    setStartStopPairsIndex(closestFractionResult.startStopPairsIndex);
+    ref.current.currentTime =
+      closestFractionResult.fraction * ref.current.duration;
+  }, []);
 
   return (
     <div className="video">
@@ -83,18 +92,7 @@ function VideoPlayer({ children, startStopPairs }: VideoProps) {
         startStopPairs={startStopPairs}
         startStopPairsIndex={startStopPairsIndex}
         width={width}
-        handleSetTimeFraction={(fraction) => {
-          if (!ref.current) return;
-
-          const closestFractionResult = getClosestValidFraction(
-            startStopPairs,
-            fraction
-          );
-
-          setStartStopPairsIndex(closestFractionResult.startStopPairsIndex);
-          ref.current.currentTime =
-            closestFractionResult.fraction * ref.current.duration;
-        }}
+        handleSetTimeFraction={handleSetTimeFraction}
       />
       <div className="video-control-buttons">
         <button
