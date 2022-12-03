@@ -7,7 +7,7 @@ body {
   width: 400px;
 }
 
-.slider {
+.video-progress {
   position: relative;
   height: 1rem;
   background: black;
@@ -16,7 +16,7 @@ body {
   border-radius: 0.2rem;
 }
 
-.slider-cursor {
+.video-progress-cursor {
   position: absolute;
   top: -0.15rem;
   width: 0.15rem;
@@ -24,7 +24,7 @@ body {
   background: white;
 }
 
-.slider-range-indicator {
+.video-progress-range-indicator {
   position: absolute;
   height: 0.6rem;
   background: rgb(96, 96, 96);
@@ -32,7 +32,7 @@ body {
   border-radius: 0.15rem;
 }
 
-.slider-range-indicator.selected {
+.video-progress-range-indicator.selected {
   background: rgba(53, 137, 69, 0.982);
 }
 

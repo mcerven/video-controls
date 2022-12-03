@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { StartStop } from "../types";
 import { toPercentStr } from "../utils/videoPlayerHelpers";
 
@@ -19,42 +19,34 @@ export default function VideoProgress({
 }: VideoProgressProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const handleClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
     if (!ref.current) return;
 
-    const handleClick = (e: MouseEvent): void => {
-      if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
 
-      const rect = ref.current.getBoundingClientRect();
-
-      // Mouse position
-      const x = e.clientX - rect.left;
-      handleSetTimeFraction(x / width);
-    };
-    ref.current.addEventListener("click", handleClick);
-
-    return () => {
-      ref.current?.removeEventListener("click", handleClick);
-    };
-  }, []);
+    // Mouse position
+    const x = e.clientX - rect.left;
+    handleSetTimeFraction(x / width);
+  };
 
   return (
-    <div ref={ref} className="slider">
+    <div ref={ref} className="video-progress" onClick={handleClick}>
       {startStopPairs.map((pair, index) => (
-        <React.Fragment key={index}>
-          <div
-            className={`slider-range-indicator ${
-              startStopPairsIndex === index ? "selected" : ""
-            }`}
-            style={{
-              left: Math.floor(pair[0] * width),
-              right: Math.floor(width - pair[1] * width),
-            }}
-          />
-        </React.Fragment>
+        <div
+          key={index}
+          className={`video-progress-range-indicator ${
+            startStopPairsIndex === index ? "selected" : ""
+          }`}
+          style={{
+            left: Math.floor(pair[0] * width),
+            right: Math.floor(width - pair[1] * width),
+          }}
+        />
       ))}
       <div
-        className="slider-cursor"
+        className="video-progress-cursor"
         style={{ left: toPercentStr(currentProgress) }}
       />
     </div>
