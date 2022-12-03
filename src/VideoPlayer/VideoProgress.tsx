@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { StartStop } from "../types";
-import { toPercentStr } from "./toPercentStr";
+import { toPercentStr } from "../utils/videoPlayerHelpers";
 
-interface SliderProps {
+interface VideoProgressProps {
   currentProgress: number;
   startStopPairs: StartStop[];
   startStopPairsIndex: number;
@@ -10,13 +10,13 @@ interface SliderProps {
   handleSetTimeFraction: (fraction: number) => void;
 }
 
-export default function Slider({
+export default function VideoProgress({
   currentProgress,
   startStopPairs,
   startStopPairsIndex,
   width,
   handleSetTimeFraction,
-}: SliderProps) {
+}: VideoProgressProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

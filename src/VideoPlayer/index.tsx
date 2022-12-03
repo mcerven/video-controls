@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import Slider from "./Slider";
+import VideoProgress from "./VideoProgress";
 import { StartStop } from "../types";
-import { getClosestValidFraction } from "./toPercentStr";
+import { getClosestValidFraction } from "../utils/videoPlayerHelpers";
 
 const width = 400;
 
@@ -10,7 +10,7 @@ interface VideoProps {
   startStopPairs: StartStop[];
 }
 
-function Video({ children, startStopPairs }: VideoProps) {
+function VideoPlayer({ children, startStopPairs }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const [startStopPairsIndex, setStartStopPairsIndex] = useState(0);
   const [currentProgress, setCurrentProgress] = useState(0);
@@ -78,7 +78,7 @@ function Video({ children, startStopPairs }: VideoProps) {
       <video ref={ref} width={width} loop muted autoPlay>
         {children}
       </video>
-      <Slider
+      <VideoProgress
         currentProgress={currentProgress}
         startStopPairs={startStopPairs}
         startStopPairsIndex={startStopPairsIndex}
@@ -101,18 +101,18 @@ function Video({ children, startStopPairs }: VideoProps) {
           disabled={startStopPairsIndex <= 0}
           onClick={handlePreviousClick}
         >
-          {"←"}
+          ←
         </button>
         <button onClick={handleStopPlayClick}>Play / Stop</button>
         <button
           disabled={startStopPairsIndex >= startStopPairs.length - 1}
           onClick={handleNextClick}
         >
-          {"→"}
+          →
         </button>
       </div>
     </div>
   );
 }
 
-export default Video;
+export default VideoPlayer;

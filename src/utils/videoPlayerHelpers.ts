@@ -1,13 +1,8 @@
-import { StartStop } from "../types";
+import { ClosestFraction, StartStop } from "../types";
 
 export function toPercentStr(val: number): string {
   return `${val * 100}%`;
 }
-
-type ClosestFraction = {
-  startStopPairsIndex: number;
-  fraction: number;
-};
 
 export function getClosestValidFraction(
   startStopPairs: StartStop[],

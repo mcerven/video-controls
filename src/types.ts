@@ -5,3 +5,8 @@ export interface VideoData {
   srcType: string;
   startStopPairs: StartStop[];
 }
+
+export type ClosestFraction = {
+  startStopPairsIndex: number;
+  fraction: number;
+};
