@@ -39,18 +39,21 @@ function VideoPlayer({ children, startStopPairs }: VideoProps) {
     }
   };
 
-  const handleSetTimeFraction = useCallback((fraction: number): void => {
-    if (!ref.current) return;
+  const handleSetTimeFraction = useCallback(
+    (fraction: number): void => {
+      if (!ref.current) return;
 
-    const closestFractionResult = getClosestValidFraction(
-      startStopPairs,
-      fraction
-    );
+      const closestFractionResult = getClosestValidFraction(
+        startStopPairs,
+        fraction
+      );
 
-    setStartStopPairsIndex(closestFractionResult.startStopPairsIndex);
-    ref.current.currentTime =
-      closestFractionResult.fraction * ref.current.duration;
-  }, []);
+      setStartStopPairsIndex(closestFractionResult.startStopPairsIndex);
+      ref.current.currentTime =
+        closestFractionResult.fraction * ref.current.duration;
+    },
+    [startStopPairs]
+  );
 
   return (
     <div className="video">
